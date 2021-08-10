@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: toy
   jmx:
     enabled: true
   h2:
@@ -26,7 +28,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "prometheus"
+        include: info, metrics, prometheus
   metrics:
     tags:
       application: ${spring.application.name}
