@@ -38,4 +38,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/toy:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/toy:${GITHUB_RUN_NUMBER}
