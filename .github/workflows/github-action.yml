@@ -2,10 +2,7 @@ name: CI/CD ㅋㅋ
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
+    branches: [ main ]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -38,4 +35,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/toy:${{ github.run_number }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/toy:latest
