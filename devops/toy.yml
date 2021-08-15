@@ -1,0 +1,97 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: react-deploy
+spec:
+  rules:
+    - host: api.192.168.64.5.sslip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: react-deploy
+                port:
+                  number: 3000
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: spring-deploy
+                port:
+                  number: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-deploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: react
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: react
+        tier: frontend
+    spec:
+      containers:
+        - name: react
+          image: tesung30/toy-front:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+              name: react
+      restartPolicy: Always
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: react-deploy
+spec:
+  ports:
+    - port: 3000
+      protocol: TCP
+  selector:
+    app: react
+    tier: frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-deploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: spring
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: spring
+        tier: backend
+    spec:
+      containers:
+        - name: spring
+          image: tesung30/toy:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: react
+      restartPolicy: Always
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: spring-deploy
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+  selector:
+    app: spring
+    tier: backend
