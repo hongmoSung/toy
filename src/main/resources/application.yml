@@ -32,3 +32,9 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
+
+logging:
+  level:
+    org.springframework.web: WARN
+  file:
+    name: logs/log.log

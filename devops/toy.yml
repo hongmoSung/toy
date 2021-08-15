@@ -4,7 +4,7 @@ metadata:
   name: react-deploy
 spec:
   rules:
-    - host: api.192.168.64.5.sslip.io
+    - host: toy.192.168.64.5.sslip.io
       http:
         paths:
           - path: /
@@ -15,6 +15,13 @@ spec:
                 port:
                   number: 3000
           - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: spring-deploy
+                port:
+                  number: 8080
+          - path: /actuator
             pathType: Prefix
             backend:
               service:
