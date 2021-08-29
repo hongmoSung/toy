@@ -1,40 +1,9 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: react-deploy
-spec:
-  rules:
-    - host: toy.192.168.64.5.sslip.io
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: react-deploy
-                port:
-                  number: 3000
-          - path: /api
-            pathType: Prefix
-            backend:
-              service:
-                name: spring-deploy
-                port:
-                  number: 8080
-          - path: /actuator
-            pathType: Prefix
-            backend:
-              service:
-                name: spring-deploy
-                port:
-                  number: 8080
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: react-deploy
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: react
@@ -50,7 +19,7 @@ spec:
           image: tesung30/toy-front:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 3000
+            - containerPort: 80
               name: react
       restartPolicy: Always
 ---
@@ -60,7 +29,7 @@ metadata:
   name: react-deploy
 spec:
   ports:
-    - port: 3000
+    - port: 80
       protocol: TCP
   selector:
     app: react
@@ -102,3 +71,34 @@ spec:
   selector:
     app: spring
     tier: backend
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: toy-ingress
+spec:
+  rules:
+    - host: toy.192.168.64.3.sslip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: react-deploy
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: spring-deploy
+                port:
+                  number: 8080
+          - path: /actuator
+            pathType: Prefix
+            backend:
+              service:
+                name: spring-deploy
+                port:
+                  number: 8080
