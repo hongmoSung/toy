@@ -36,5 +36,4 @@ management:
 logging:
   level:
     org.springframework.web: WARN
-  file:
-    name: logs/log.log
+  config: classpath:logback.xml
